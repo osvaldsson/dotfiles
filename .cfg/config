@@ -8,5 +8,5 @@
     l = !. ~/bin/githelpers-dotfiles && pretty_git_log
     ra = !git --git-dir=$HOME/.cfg/ --work-tree=$HOME l -30 --all
 [remote "origin"]
-	url = /keybase/public/osvaldsson/dotfiles.git
+	url = git@github.com:osvaldsson/dotfiles.git
 	fetch = +refs/heads/*:refs/remotes/origin/*
