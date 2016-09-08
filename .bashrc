@@ -121,7 +121,7 @@ if ! shopt -oq posix; then
 fi
 
 # Update our dotfiles
-/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME pull
+/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME pull -q
 
 # Set the default editor to vim
 EDITOR=vim
