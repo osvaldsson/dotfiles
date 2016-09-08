@@ -1,3 +1,36 @@
+# .gitconfig
+# Author: Olafur Osvaldsson <osvaldsson@icelandic.net>
+# Source: https://github.com/osvaldsson/dotfiles/.gitconfig
+
 [user]
      email = osvaldsson@icelandic.net
      name = Olafur Osvaldsson
+
+[color]
+    ui = auto
+
+[core]
+    pager = less -FMRiX
+    excludesfile = ~/.config/git/excludes
+
+[push]
+    default = current
+
+[alias]
+    dag = log --graph --format='format:%C(yellow)%h%C(reset) %C(blue)\"%an\" <%ae>%C(reset) %C(magenta)%ar%C(reset)%C(auto)%d%C(reset)%n%s' --date-order
+    st = status
+    ci = commit
+    co = checkout
+    di = diff --stat
+    dc = diff --cached
+    ff = merge --ff-only
+    pullff = pull --ff-only
+    noff = merge --no-ff
+    b = branch
+    l = "!source ~/bin/githelpers && pretty_git_log"
+    ra = !git l -30 --all
+
+[amazon]
+    append-cr-url = false
+    suggest-gitfarm-client = shown
+    pull-request-by-default = true

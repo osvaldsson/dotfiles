@@ -1,3 +1,7 @@
+# .gitignore
+# Author: Olafur Osvaldsson <osvaldsson@icelandic.net>
+# Source: https://github.com/osvaldsson/dotfiles/.gitignore
+
 # Compiled Python files
 *.pyc
 

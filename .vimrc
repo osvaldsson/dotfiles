@@ -1,3 +1,7 @@
+"" .vimrc
+"" Author: Olafur Osvaldsson <osvaldsson@icelandic.net>
+"" Source: https://github.com/osvaldsson/dotfiles/.vimrc
+
 "" Automatic reloading of .vimrc
 autocmd! bufwritepost .vimrc source %
 
