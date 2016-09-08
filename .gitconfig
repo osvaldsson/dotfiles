@@ -27,7 +27,7 @@
     pullff = pull --ff-only
     noff = merge --no-ff
     b = branch
-    l = "!source ~/bin/githelpers && pretty_git_log"
+    l = !. ~/bin/githelpers && pretty_git_log
     ra = !git l -30 --all
 
 [amazon]

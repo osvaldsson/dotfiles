@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# bin/githelpers
+# bin/githelpers-dotfiles
 # Author: Olafur Osvaldsson <osvaldsson@icelandic.net>
-# Source: https://github.com/osvaldsson/dotfiles/bin/githelpers
+# Source: https://github.com/osvaldsson/dotfiles/bin/githelpers-dotfiles
 
 HASH="%C(yellow)%h%Creset"
 RELATIVE_TIME="%Cgreen(%ar)%Creset"
@@ -13,7 +13,8 @@ SUBJECT="%s"
 FORMAT="$HASH}$RELATIVE_TIME}$AUTHOR}$REFS $SUBJECT"
 
 pretty_git_log() {
-    $1 log --graph --abbrev-commit --date=relative --pretty="tformat:${FORMAT}" $* |
+    git --git-dir=$HOME/.cfg/ --work-tree=$HOME log --graph \
+        --abbrev-commit --date=relative --pretty="tformat:${FORMAT}" $* |
         # Line columns up based on } delimiter
         column -s '}' -t |
         # Page only if we need to
