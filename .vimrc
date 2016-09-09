@@ -148,6 +148,9 @@ if has("autocmd")
     "" Treat arduino files correctly
     autocmd! BufNewFile,BufRead *.pde setlocal ft=arduino
     autocmd! BufNewFile,BufRead *.ino setlocal ft=arduino
+
+    "" Treat .md as MarkDown
+    autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 endif
 
 
@@ -159,8 +162,18 @@ set colorcolumn=80  " Color column 80 to mark the max width
 highlight ColorColumn ctermbg=000
 
 
+"" MarkDown specific settings
+au FileType markdown setlocal tw=99
+au FileType markdown setlocal colorcolumn=100
+"" Enable fenced code block syntax highlighting
+let g:markdown_fenced_languages = ['html', 'python', 'bash=sh']
+"" Disable markdown syntax concealing
+let g:markdown_syntax_conceal = 0
+
+
 "" Autosave on losing focus
 au FocusLost * :wa
+
 
 "" Awesome line number magic (,l)
 function! NumberToggle()
@@ -256,6 +269,22 @@ set listchars=tab:•\ ,trail:•,extends:»,precedes:« " Unprintable chars map
 
 "" Better Whitespace - https://github.com/ntpeters/vim-better-whitespace
 Plugin 'ntpeters/vim-better-whitespace'
+
+
+"" vim-markdown - https://github.com/tpope/vim-markdown
+Plugin 'tpope/vim-markdown'
+
+
+"" vim-markdown-folding - https://github.com/nelstrom/vim-markdown-folding
+Plugin 'nelstrom/vim-markdown-folding'
+
+
+"" Surround - https://github.com/tpope/vim-surround
+Plugin 'tpope/vim-surround'
+
+
+"" Goyo - https://github.com/junegunn/goyo.vim
+Plugin 'junegunn/goyo.vim'
 
 
 "" All of your Plugins must be added before the following line
