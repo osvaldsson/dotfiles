@@ -125,3 +125,10 @@ fi
 
 # Set the default editor to vim
 EDITOR=vim
+
+# Random custom settings
+export GPG_TTY=`tty`
+export LANG=en_US.UTF-8
+
+# Start the ssh-agent
+source ~/.ssh-agent-start
