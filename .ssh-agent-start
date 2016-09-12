@@ -1,5 +1,5 @@
 SSH_ENV="$HOME/.ssh/environment"
-SSH_KEYS=`ls -1 ~/.ssh/id_rsa ~/.ssh/identity ~/.ssh/*.pem`
+SSH_KEYS=`ls -1 ~/.ssh/id_rsa ~/.ssh/identity ~/.ssh/*.pem 2>/dev/null`
 
 function start_agent {
      echo "Initialising new SSH agent..."
