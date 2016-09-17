@@ -120,9 +120,6 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# Update our dotfiles
-/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME pull -q
-
 # Set the default editor to vim
 EDITOR=vim
 
@@ -132,3 +129,6 @@ export LANG=en_US.UTF-8
 
 # Start the ssh-agent
 source ~/.ssh-agent-start
+
+# Update our dotfiles
+/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME pull -q
