@@ -1,3 +1,7 @@
+# .ssh-agent-start
+# Author: Olafur Osvaldsson <osvaldsson@icelandic.net>
+# Source: https://github.com/osvaldsson/dotfiles/.ssh-agent-start
+
 SSH_ENV="$HOME/.ssh/environment"
 SSH_KEYS=`ls -1 ~/.ssh/id_rsa ~/.ssh/identity ~/.ssh/*.pem 2>/dev/null`
 
