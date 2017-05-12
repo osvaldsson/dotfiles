@@ -163,8 +163,8 @@ highlight ColorColumn ctermbg=000
 
 
 "" MarkDown specific settings
-au FileType markdown setlocal tw=99
-au FileType markdown setlocal colorcolumn=100
+au FileType markdown setlocal tw=110
+au FileType markdown setlocal colorcolumn=111
 "" Enable fenced code block syntax highlighting
 let g:markdown_fenced_languages = ['html', 'python', 'bash=sh']
 "" Disable markdown syntax concealing
