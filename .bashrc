@@ -127,8 +127,18 @@ EDITOR=vim
 export GPG_TTY=`tty`
 export LANG=en_US.UTF-8
 
-# Start the ssh-agent
-source ~/.ssh-agent-start
+# Start the ssh-agent if we are local
+if [ "$SSH_CONNECTION" = "" ]; then
+  source ~/.ssh-agent-start
+fi
 
 # Update our dotfiles
 /usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME pull -q
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# export DEV_DIR="$HOME/.virtualenvs/development"
+# [ -s "$DEV_DIR/bin/activate" ] && \. "$DEV_DIR/bin/activate"  # This loads the Python development environment
+
