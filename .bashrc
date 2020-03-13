@@ -127,8 +127,9 @@ EDITOR=vim
 export GPG_TTY=`tty`
 export LANG=en_US.UTF-8
 
-# Start the ssh-agent if we are local
-if [ "$SSH_CONNECTION" = "" ]; then
+# Start the ssh-agent if we don't have forwarded keys
+ssh-add -l >/dev/null 2>&1
+if [ $? -gt 0 ]; then
   source ~/.ssh-agent-start
 fi
 
