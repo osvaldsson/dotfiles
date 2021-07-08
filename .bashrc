@@ -130,7 +130,22 @@ export LANG=en_US.UTF-8
 # Start the ssh-agent if we don't have forwarded keys
 ssh-add -l >/dev/null 2>&1
 if [ $? -gt 0 ]; then
-  source ~/.ssh-agent-start
+    export SSH_AUTH_SOCK=$HOME/.ssh_auth_sock
+
+    # Start the ssh-agent if needed
+    source ~/.ssh-agent-start
+
+    # Alias the ssh-agent forced restarting
+    alias screpin='source ~/.ssh-agent-start'
+
+    # If we are starting a shell with a socket already set, then it must be a good one
+    if [ $SSH_AUTH_SOCK ]; then
+        if [ $SSH_AUTH_SOCK != $HOME/.ssh_auth_sock ]; then
+            rm $HOME/.ssh_auth_sock
+            ln -s $SSH_AUTH_SOCK $HOME/.ssh_auth_sock
+        fi
+    fi
+    export SSH_AUTH_SOCK=$HOME/.ssh_auth_sock
 fi
 
 # Update our dotfiles
