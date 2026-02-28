@@ -158,3 +158,5 @@ export NVM_DIR="$HOME/.nvm"
 # export DEV_DIR="$HOME/.virtualenvs/development"
 # [ -s "$DEV_DIR/bin/activate" ] && \. "$DEV_DIR/bin/activate"  # This loads the Python development environment
 
+export PATH=$PATH:~/.local/bin
+export PATH=$PATH:~/go/bin

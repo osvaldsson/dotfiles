@@ -12,6 +12,7 @@
 [core]
     pager = less -FMRiX
     excludesfile = ~/.config/git/excludes
+    editor = vim
 
 [push]
     default = current
@@ -29,8 +30,3 @@
     b = branch
     l = !. ~/bin/githelpers && pretty_git_log
     ra = !git l -30 --all
-
-[amazon]
-    append-cr-url = false
-    suggest-gitfarm-client = shown
-    pull-request-by-default = true

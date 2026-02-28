@@ -1,0 +1,48 @@
+# dotfiles-install
+# Author: Olafur Osvaldsson <osvaldsson@icelandic.net>
+# Source: https://git.io/dotfiles-install
+
+# Let's start by checking if the directory exists
+if [ -d $HOME/.cfg ]; then
+    echo "$HOME/.cfg already exists, exiting"
+    exit 1
+fi
+
+# The directory didn't exist so we will continue
+git clone --bare https://github.com/osvaldsson/dotfiles.git $HOME/.cfg
+function config {
+   /usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME "$@"
+}
+
+# Make a backup of the old dotfiles before we overwrite
+config checkout > /dev/null 2>&1
+if [ $? = 0 ]; then
+    echo "Checked out dotfiles.";
+else
+    echo "Backing up pre-existing dot files.";
+    mkdir -p .dotfiles-backup
+    config checkout 2>&1 |
+        egrep "^\s+" |
+        awk {'print $1'} |
+        rsync -a --remove-source-files --files-from="-" ~/ ~/.dotfiles-backup/
+fi;
+
+# Update the dotfile git config
+config checkout > /dev/null 2>&1
+config config status.showUntrackedFiles no
+config config alias.l '!. ~/bin/githelpers-dotfiles && pretty_git_log'
+config config alias.ra '!git --git-dir=$HOME/.cfg/ --work-tree=$HOME l -30 --all'
+
+# Ensure we have the right stuff installed
+sudo snap install go --classic
+sudo apt install fzf ripgrep
+go install golang.org/x/tools/gopls@latest
+npm install -g typescript-language-server
+
+# Add the required vim bundles
+if [ ! -d ~/.vim/bundle/Vundle.vim ]; then
+    echo "Installing vim plugins"
+    git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+fi
+# And finally make sure that we update all the plugins
+vim +PluginInstall +qall

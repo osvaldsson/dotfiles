@@ -20,13 +20,13 @@ set pastetoggle=<F2>
 set clipboard=unnamed
 
 
-"" Don't add empty newlines at the end of files
-set binary
-set noeol
+"" Modern file handling (safer than binary mode)
+set fixendofline
+set nofixeol
 
 
-"" Allow custom settings
-set modeline
+"" Security: Disable modeline for safety
+set nomodeline
 
 
 "" Enable undo
@@ -53,9 +53,9 @@ set bs=2     " make backspace behave like normal again
 "" Various settins
 set nocompatible                " choose no compatibility with legacy vi
 set encoding=utf-8
-set exrc                        " load vimrc from current directory
+" set exrc                      " DISABLED: Security risk
 set showcmd                     " display incomplete commands
-set modeline                    " Allow document inline settings
+" set modeline                  " DISABLED: Security risk (duplicate setting)
 set guifont=Ubuntu\ Mono\ for\ VimPowerline\ 12     " Set the default font
 
 
@@ -106,7 +106,7 @@ noremap <Leader>W :w !sudo tee % > /dev/null<CR>
 
 "" Make <tab> match bracket pairs
 nnoremap <tab> %
-nnoremap <tab> %
+vnoremap <tab> %
 
 
 "" easier moving of code blocks
@@ -290,6 +290,26 @@ Plugin 'junegunn/goyo.vim'
 "" vim-go - https://github.com/fatih/vim-go
 Plugin 'fatih/vim-go'
 
+"" Modern development tools
+Plugin 'preservim/nerdtree'
+Plugin 'junegunn/fzf'
+Plugin 'junegunn/fzf.vim'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'tpope/vim-fugitive'
+
+"" OATS-compliant language support
+Plugin 'hashivim/vim-terraform'
+Plugin 'rust-lang/rust.vim'
+Plugin 'pangloss/vim-javascript'
+Plugin 'leafgarland/typescript-vim'
+Plugin 'maxmellon/vim-jsx-pretty'
+
+"" LSP and completion (modern vim support)
+Plugin 'prabirshrestha/vim-lsp'
+Plugin 'mattn/vim-lsp-settings'
+Plugin 'prabirshrestha/asyncomplete.vim'
+Plugin 'prabirshrestha/asyncomplete-lsp.vim'
+
 "" All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -304,3 +324,69 @@ filetype plugin indent on    " required
 ""
 "" see :h vundle for more details or wiki for FAQ
 "" Put your non-Plugin stuff after this line
+
+"" ========================================
+"" Modern Plugin Configurations
+"" ========================================
+
+"" NERDTree configuration
+map <C-n> :NERDTreeToggle<CR>
+let NERDTreeShowHidden=1
+let NERDTreeIgnore=['\.pyc$', '\.pyo$', '\.rbc$', '\.rbo$', '\.class$', '\.o$', '\~$']
+
+"" FZF configuration
+nnoremap <Leader>f :Files<CR>
+nnoremap <Leader>b :Buffers<CR>
+nnoremap <Leader>r :Rg<CR>
+nnoremap <Leader>t :Tags<CR>
+
+"" GitGutter configuration
+set updatetime=100
+let g:gitgutter_map_keys = 0
+
+"" vim-go configuration (OATS compliant)
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_types = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_build_constraints = 1
+let g:go_fmt_command = "goimports"
+let g:go_def_mode='gopls'
+let g:go_info_mode='gopls'
+
+"" TypeScript/JavaScript configuration
+let g:typescript_indent_disable = 0
+autocmd FileType typescript,javascript setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+autocmd FileType typescript,javascript setlocal colorcolumn=120
+
+"" Rust configuration
+let g:rustfmt_autosave = 1
+autocmd FileType rust setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
+autocmd FileType rust setlocal colorcolumn=100
+
+"" Terraform configuration
+let g:terraform_align=1
+let g:terraform_fmt_on_save=1
+autocmd FileType terraform setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+
+"" LSP configuration
+if executable('gopls')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'gopls',
+        \ 'cmd': {server_info->['gopls']},
+        \ 'allowlist': ['go'],
+        \ })
+endif
+
+if executable('typescript-language-server')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'typescript-language-server',
+        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
+        \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'tsconfig.json'))},
+        \ 'allowlist': ['typescript', 'javascript'],
+        \ })
+endif
+
+"" Asyncomplete configuration
+let g:asyncomplete_auto_popup = 1
+set completeopt=menuone,noinsert,noselect,preview
