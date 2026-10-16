@@ -127,26 +127,19 @@ EDITOR=vim
 export GPG_TTY=`tty`
 export LANG=en_US.UTF-8
 
-# Start the ssh-agent if we don't have forwarded keys
-ssh-add -l >/dev/null 2>&1
-if [ $? -gt 0 ]; then
-    export SSH_AUTH_SOCK=$HOME/.ssh_auth_sock
-
-    # Start the ssh-agent if needed
-    source ~/.ssh-agent-start
-
-    # Alias the ssh-agent forced restarting
-    alias screpin='source ~/.ssh-agent-start'
-
-    # If we are starting a shell with a socket already set, then it must be a good one
-    if [ $SSH_AUTH_SOCK ]; then
-        if [ $SSH_AUTH_SOCK != $HOME/.ssh_auth_sock ]; then
-            rm $HOME/.ssh_auth_sock
-            ln -s $SSH_AUTH_SOCK $HOME/.ssh_auth_sock
-        fi
-    fi
-    export SSH_AUTH_SOCK=$HOME/.ssh_auth_sock
+# ssh agent: use a forwarded agent when there is one, otherwise our own, and keep ~/.ssh_auth_sock pointing at
+# the live socket (tmux / screen sessions use the symlink, so a new login repairs them too)
+agent_ok() { ssh-add -l >/dev/null 2>&1; [ $? -ne 2 ]; }      # exit 2 = no agent; 1 = an agent without keys
+if [ -n "$SSH_AUTH_SOCK" ] && [ "$SSH_AUTH_SOCK" != "$HOME/.ssh_auth_sock" ] && agent_ok; then
+    ln -sfn "$SSH_AUTH_SOCK" "$HOME/.ssh_auth_sock"           # a fresh forwarded (or local) agent
+elif ! SSH_AUTH_SOCK=$HOME/.ssh_auth_sock agent_ok; then
+    source ~/.ssh-agent-start                               # none reachable: start our own
+    ln -sfn "$SSH_AUTH_SOCK" "$HOME/.ssh_auth_sock"
 fi
+export SSH_AUTH_SOCK=$HOME/.ssh_auth_sock
+
+# Alias the ssh-agent forced restarting
+alias screpin='source ~/.ssh-agent-start; ln -sfn "$SSH_AUTH_SOCK" "$HOME/.ssh_auth_sock"; export SSH_AUTH_SOCK=$HOME/.ssh_auth_sock'
 
 # Update our dotfiles
 /usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME pull -q
