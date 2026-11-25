@@ -127,16 +127,19 @@ EDITOR=vim
 export GPG_TTY=`tty`
 export LANG=en_US.UTF-8
 
-# ssh agent: use a forwarded agent when there is one, otherwise our own, and keep ~/.ssh_auth_sock pointing at
-# the live socket (tmux / screen sessions use the symlink, so a new login repairs them too)
-agent_ok() { ssh-add -l >/dev/null 2>&1; [ $? -ne 2 ]; }      # exit 2 = no agent; 1 = an agent without keys
-if [ -n "$SSH_AUTH_SOCK" ] && [ "$SSH_AUTH_SOCK" != "$HOME/.ssh_auth_sock" ] && agent_ok; then
-    ln -sfn "$SSH_AUTH_SOCK" "$HOME/.ssh_auth_sock"           # a fresh forwarded (or local) agent
-elif ! SSH_AUTH_SOCK=$HOME/.ssh_auth_sock agent_ok; then
-    source ~/.ssh-agent-start                               # none reachable: start our own
-    ln -sfn "$SSH_AUTH_SOCK" "$HOME/.ssh_auth_sock"
+# Don't try to setup the agent for shells like stupid Codex
+if [ -t 0 ] && [ -t 1 ]; then
+    # ssh agent: use a forwarded agent when there is one, otherwise our own, and keep ~/.ssh_auth_sock pointing at
+    # the live socket (tmux / screen sessions use the symlink, so a new login repairs them too)
+    agent_ok() { ssh-add -l >/dev/null 2>&1; [ $? -ne 2 ]; }      # exit 2 = no agent; 1 = an agent without keys
+    if [ -n "$SSH_AUTH_SOCK" ] && [ "$SSH_AUTH_SOCK" != "$HOME/.ssh_auth_sock" ] && agent_ok; then
+        ln -sfn "$SSH_AUTH_SOCK" "$HOME/.ssh_auth_sock"           # a fresh forwarded (or local) agent
+    elif ! SSH_AUTH_SOCK=$HOME/.ssh_auth_sock agent_ok; then
+        source ~/.ssh-agent-start                               # none reachable: start our own
+        ln -sfn "$SSH_AUTH_SOCK" "$HOME/.ssh_auth_sock"
+    fi
+    export SSH_AUTH_SOCK=$HOME/.ssh_auth_sock
 fi
-export SSH_AUTH_SOCK=$HOME/.ssh_auth_sock
 
 # Alias the ssh-agent forced restarting
 alias screpin='source ~/.ssh-agent-start; ln -sfn "$SSH_AUTH_SOCK" "$HOME/.ssh_auth_sock"; export SSH_AUTH_SOCK=$HOME/.ssh_auth_sock'
